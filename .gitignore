@@ -1,3 +1,6 @@
 app/app/__pycache__/
 app/bases/__pycache__/
 app/bases/migrations/
+.venv/Lib/site-packages/asgiref/__init__.py
+.venv/
+app/data

@@ -4,3 +4,4 @@ app/bases/migrations/
 .venv/Lib/site-packages/asgiref/__init__.py
 .venv/
 app/data
+pgdata

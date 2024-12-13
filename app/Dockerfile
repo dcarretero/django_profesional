@@ -1,19 +1,29 @@
-#Imagen base
-FROM python:3.12.6-slim-bullseye
+FROM python:3-slim
 
-#Setear variables de entorno
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+EXPOSE 8000
+EXPOSE 5432
+
+# Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Setear directorio de trabajo
-WORKDIR /code
+# Install pip requirements
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
 
-# Instalar dependencias
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+WORKDIR /app
+COPY . /app
 
-# Copiar archivos
-COPY . .
+# Creates a non-root user with an explicit UID and adds permission to access the /app folder
+# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+# File wsgi.py was not found. Please enter the Python path to wsgi file.
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app.wsgi"]
+
 
 
